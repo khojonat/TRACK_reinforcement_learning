@@ -1,9 +1,9 @@
 &TRAN
-  table_dir='C:/Users/trana/Desktop/TRACK_Development/TRACK_reinforcement_learning/Fields/'
-  rfq3d_dir='C:/Users/trana/Desktop/TRACK_Development/TRACK_reinforcement_learning/Fields/rfq2-v42-trp-large-apr/'
+  table_dir='C:\Users\trana\Desktop\TRACKfiles\Fields\'
+  rfq3d_dir='C:\Users\trana\Desktop\TRACKfilesFields\rfq2-v42-trp-large-apr\'
   Win=30.5d3
-  freqb=12.125d6
-  part=0.99
+  freqb =12.125d6
+  part =0.99
   nqtot=1
   qq=34.
   Amass=238.
@@ -15,13 +15,13 @@
   df_4D=180.
   epsnx=0.12d0
   alfax=1.00d0
-  betax=100.0d0
-  epsny=0.12d0
-  alfay=1.00d0
-  betay=100.0d0
-  epsnz=25.00d0
-  alfaz=0.00d0
-  betaz=10.0d0
+  betax =100.0d0
+  epsny =0.12d0
+  alfay =1.00d0
+  betay =100.0d0
+  epsnz =25.00d0
+  alfaz =0.00d0
+  betaz =10.0d0
   phmax=180.
   dwwmax=0.2
   x00=0.,0.
@@ -29,7 +29,7 @@
   y00=0.,0.
   yp00=0.,0.
   ph00=0.,0.
-  dww00=0.,0.
+  dww00=0.
 &END
 &INDEX
   NRZ=1
@@ -56,18 +56,18 @@
   iwrite_step=0
 &END
 &MATCH
-  mat_type=2
+  mat_typ=2
   mat_opt=1
   min_typ=1
   min_opt=5
   min_max=1000
-  min_loss=1
+  min_los=1
   min_xys=0
   min_bnd=1
-  bnd_fac=2
-  bnd_low=0
-  bnd_upp=0
-  beamw=0
+  bnd_fac=2.
+  bnd_low=0.
+  bnd_upp=0.
+  beamw=0.
   beamf=1.4,23.,0.,1.4,23.,0.,0.,0.,0.
-  fit_err=0.01
+  fit_err=.01
 &END
