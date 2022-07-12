@@ -113,7 +113,7 @@ class Config:
                             '09_eq3d':[('x',10001),('px',10001),('y',10001),('py',10001),('l',10001)],
                             '12_eq3d':[('x',10001),('px',10001),('y',10001),('py',10001),('l',10001)]},
                 'size':2**14,
-                'index':[1,6,8,12]}  # be careful about indexing. index telling which sclinac element to get distro from. index=3 mean 3 elements up to element 3 will be recorded
+                'index':[1,6,8,12,-1]}  # be careful about indexing. index telling which sclinac element to get distro from. index=3 mean 3 elements up to element 3 will be recorded
         
 if __name__ == "config":
     print("Loading config...")

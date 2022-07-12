@@ -76,7 +76,7 @@ def get_distro(folder, sclinac_config, track_config, index, cf=cf):
     sclinac = str(folder)+'/sclinac.dat'
     track = str(folder)+'/track.dat'
     distro = str(folder)+'/read_dis.out'
-    # method to undate sclinac.dat
+    # method to update sclinac.dat
     make_sclinac(sclinac, sclinac_config[:index])
     
     # If want to get distribution, must make sure TRACK makes them.
@@ -90,6 +90,21 @@ def get_distro(folder, sclinac_config, track_config, index, cf=cf):
     # And get the initial distribution
     dist = dis2dataframe(distro)
     return dist
+
+def get_beamout(folder, cf=cf):
+    """
+    Get beam.out file into a pandas df. Must be used after running the simulation first.
+    
+    Input:
+    folder: folder of current track instance
+    cf: configuration file
+    
+    Output:
+    df: - pandas dataFrame of beam.out
+    """
+    beam = str(folder)+'/beam.out'
+    df =  pd.read_csv(beam, delim_whitespace=True, header=0)
+    return df
 
 def save_inputs(hdf5_file, location, input_dic, index):
     """
