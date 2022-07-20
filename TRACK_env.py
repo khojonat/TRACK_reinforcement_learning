@@ -27,7 +27,7 @@ class TRACKenv(Env):
         # Ex: gym.spaces.Box(low = 0.,high = 6.,shape = (1,))
       
         # Can define other parameters of environment here
-        self.observation = np.array([0,0,0,0,0,0])  # represents the 6 initial voltages
+        self.observation = np.array([0,0,0,0,0,0], dtype = np.float32)  # represents the 6 initial voltages
         self.trials = 0  # trials counter
         
         self.cf = Config()
@@ -76,7 +76,7 @@ class TRACKenv(Env):
         return df, beam
 
   # Reinitialize the environment
-    def reset(self, return_info):
+    def reset(self, seed=None, return_info=False, options=None):
         # Don't really need this since the environment resets every time already. 
         # Unless we want to start off at a certain voltage setting that is
         # remove test folder
@@ -84,7 +84,7 @@ class TRACKenv(Env):
         
         copy2folder(self.cf.PARENT_TRACK,self.cf.CHILD_TRACK,'test')  # create folder
         self.sim_folder = str(self.cf.CHILD_TRACK)+'/test'
-        self.observation = np.array([0,0,0,0,0,0])
+        self.observation = ((np.random.rand(6,)-.5)*8).astype('float32')
         if return_info: 
             info = {}
             return self.observation, info
@@ -93,6 +93,9 @@ class TRACKenv(Env):
   # Agent takes a step in the environment, returns reward and whether the episode is finished
     def step(self, action):
         V = self.observation + action
+        for i in range(len(V)):  # hard code bounds
+            if np.abs(V[i]) > 8:
+                V[i] = np.sign(V[i])*8
         run_config = {'track': {},
              'sclinac': [[4,2,V[0]],[5,2,V[1]],[7,2,V[2]],[8,2,V[3]],[10,2,V[4]],[11,2,V[5]]],
              'inputs':{'05_eq3d':{'voltage':V[0]},  # first index in name, second index is value
