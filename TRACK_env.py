@@ -76,7 +76,7 @@ class TRACKenv(Env):
         return df, beam
 
   # Reinitialize the environment
-    def reset(self, return_info):
+    def reset(self, return_info = False):
         # Don't really need this since the environment resets every time already. 
         # Unless we want to start off at a certain voltage setting that is
         # remove test folder
