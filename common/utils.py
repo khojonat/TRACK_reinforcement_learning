@@ -27,6 +27,8 @@ def mini_batch_train(env, agent, max_episodes, max_steps, batch_size):
             agent.replay_buffer.push(state, action, reward, next_state, done)
             episode_reward += reward
             
+            print("Step reward:",reward,",Quadrupole vector:",env.observation)
+            
             if len(agent.replay_buffer) > batch_size:
                 agent.update(batch_size)   
 
