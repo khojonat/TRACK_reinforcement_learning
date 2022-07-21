@@ -80,11 +80,13 @@ class TRACKenv(Env):
         # Don't really need this since the environment resets every time already.
         # Unless we want to start off at a certain voltage setting that is
         # remove test folder
-        rmfolder(self.cf.CHILD_TRACK,'test')
+        #rmfolder(self.cf.CHILD_TRACK,'test')
 
-        copy2folder(self.cf.PARENT_TRACK,self.cf.CHILD_TRACK,'test')  # create folder
+        #copy2folder(self.cf.PARENT_TRACK,self.cf.CHILD_TRACK,'test')  # create folder
         self.sim_folder = str(self.cf.CHILD_TRACK)+'/test'
         self.observation = ((np.random.rand(6,)-.5)*8).astype('float32')
+        
+        self.trials = 0
         if return_info:
             info = {}
             return self.observation, info
