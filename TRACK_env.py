@@ -22,7 +22,7 @@ class TRACKenv(Env):
                                #             high = np.ones(self.observation_shape),
                                #             dtype = np.float16)
 
-        self.action_space = spaces.Box(low = -8.0, high = 8.0, shape =(6,) , dtype = np.float32)
+        self.action_space = spaces.Box(low = -0.25, high = 0.25, shape =(6,) , dtype = np.float32)
         self.reward_range = (0,10000)
         # Ex: gym.spaces.Box(low = 0.,high = 6.,shape = (1,))
 
@@ -85,6 +85,7 @@ class TRACKenv(Env):
         copy2folder(self.cf.PARENT_TRACK,self.cf.CHILD_TRACK,'test')  # create folder
         self.sim_folder = str(self.cf.CHILD_TRACK)+'/test'
         self.observation = ((np.random.rand(6,)-.5)*8).astype('float32')
+        self.trials = 0  # reset trials counter
         if return_info:
             info = {}
             return self.observation, info
@@ -116,6 +117,9 @@ class TRACKenv(Env):
         self.trials +=1
 
         reward = beam['#of_part_left'].values[-1]  # higher rewards the more particles that are left.
+        
+        for i in self.observation:
+            reward -= np.abs(i)**2
 
         if reward > 10000*.95:  # done if reward is greater than a number
             done = True
