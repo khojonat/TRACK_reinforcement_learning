@@ -11,19 +11,19 @@ import gym
 from gym import Env, spaces
 
 # Environment class:
-
+    
 class TRACKenv(Env):
 
     def __init__(self):
         super(TRACKenv, self).__init__()
         self.observation_shape = (6,)# Let's do simple thing first with the observation being the number of particles left.
-        self.observation_space = spaces.Box(low = -8.0, high = 8.0, shape =(6,) , dtype = np.float32)
+        self.observation_space = spaces.Box(low =np.array([-8,0,-8,0,-8,0]), high =np.array([0,8,0,8,0,8]), shape =(6,) , dtype = np.float32)
         # Ex: spaces.Box(low = np.zeros(self.observation_shape),
                                #             high = np.ones(self.observation_shape),
                                #             dtype = np.float16)
 
-        self.action_space = spaces.Box(low = -0.25, high = 0.25, shape =(6,) , dtype = np.float32)
-        self.reward_range = (0,10000)
+        self.action_space = spaces.Box(low = -.250, high = .250, shape =(6,) , dtype = np.float32)
+        self.reward_range = (-10000,10000)
         # Ex: gym.spaces.Box(low = 0.,high = 6.,shape = (1,))
 
         # Can define other parameters of environment here
@@ -80,12 +80,13 @@ class TRACKenv(Env):
         # Don't really need this since the environment resets every time already.
         # Unless we want to start off at a certain voltage setting that is
         # remove test folder
-        rmfolder(self.cf.CHILD_TRACK,'test')
+        #rmfolder(self.cf.CHILD_TRACK,'test')
 
-        copy2folder(self.cf.PARENT_TRACK,self.cf.CHILD_TRACK,'test')  # create folder
+        #copy2folder(self.cf.PARENT_TRACK,self.cf.CHILD_TRACK,'test')  # create folder
         self.sim_folder = str(self.cf.CHILD_TRACK)+'/test'
         self.observation = ((np.random.rand(6,)-.5)*8).astype('float32')
-        self.trials = 0  # reset trials counter
+       
+        self.trials = 0
         if return_info:
             info = {}
             return self.observation, info
@@ -94,8 +95,10 @@ class TRACKenv(Env):
   # Agent takes a step in the environment, returns reward and whether the episode is finished
     def step(self, action):
         V = self.observation + action
+        penalty = 0
         for i in range(len(V)):  # hard code bounds
             if np.abs(V[i]) > 8:
+                penalty += np.abs(V[i])-8  # add penalty if action brings it out of bound
                 V[i] = np.sign(V[i])*8
         run_config = {'track': {},
              'sclinac': [[4,2,V[0]],[5,2,V[1]],[7,2,V[2]],[8,2,V[3]],[10,2,V[4]],[11,2,V[5]]],
@@ -116,12 +119,13 @@ class TRACKenv(Env):
         done = False
         self.trials +=1
 
-        reward = beam['#of_part_left'].values[-1]  # higher rewards the more particles that are left.
-        
-        for i in self.observation:
-            reward -= np.abs(i)**2
+        reward0 = beam['#of_part_left'].values[5]  # higher rewards the more particles that are left.
+        reward1 = beam['#of_part_left'].values[8]  # particle left in middle
+        reward2 = beam['#of_part_left'].values[-1]  # particle left at end
+        alpha = 1500  # penalty scale factor
+        reward = 2*reward0 + 1.5*reward1 + reward2 - alpha*penalty
 
-        if reward > 10000*.95:  # done if reward is greater than a number
+        if reward > 45000*.95:  # done if reward is greater than a number
             done = True
             self.reset()
         if self.trials > 99:  # if trials over 100, also end
