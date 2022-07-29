@@ -98,10 +98,28 @@ class TRACKenv(Env):
     def step(self, action):
         V = self.observation + action
         penalty = 0
-        for i in range(len(V)):  # hard code bounds
-            if np.abs(V[i]) > 8:
+        
+        for i in [0,2,4]:
+            if V[i] < -8:
                 penalty += np.abs(V[i])-8  # add penalty if action brings it out of bound
-                V[i] = np.sign(V[i])*8
+                V[i] = -8
+            elif V[i] > 0:
+                penalty += V[i]
+                V[i] = 0
+                
+        for i in [1,3,5]:
+            if V[i] > 8:
+                penalty += np.abs(V[i])-8  # add penalty if action brings it out of bound
+                V[i] = 8
+            elif V[i] < 0:
+                penalty -= V[i]
+                V[i] = 0
+                
+        #for i in range(len(V)):  # hard code bounds
+        #    if np.abs(V[i]) > 8:
+        #        penalty += np.abs(V[i])-8  # add penalty if action brings it out of bound
+        #        V[i] = np.sign(V[i])*8
+        
         run_config = {'track': {},
              'sclinac': [[4,2,V[0]],[5,2,V[1]],[7,2,V[2]],[8,2,V[3]],[10,2,V[4]],[11,2,V[5]]],
              'inputs':{'05_eq3d':{'voltage':V[0]},  # first index in name, second index is value
