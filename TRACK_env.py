@@ -37,6 +37,7 @@ class TRACKenv(Env):
         self.sim_folder = str(cf.CHILD_TRACK)+'/test'
 
     def run(self, run_config, sim_folder):
+        
         """
         Custom run file to run one TRACK configurate and extract the required information
         Note: the type of beam element must be a constant.
@@ -54,6 +55,7 @@ class TRACKenv(Env):
         df - info about the particle distribtuion
         beam - info about the beam like emmitance and particle loss
         """
+        
         cur_track = self.cf.TRACK_DAT
         cur_sclinac = self.cf.SCLINAC
         cur_sclinac0 = self.cf.SCLINAC0
@@ -84,7 +86,7 @@ class TRACKenv(Env):
 
         #copy2folder(self.cf.PARENT_TRACK,self.cf.CHILD_TRACK,'test')  # create folder
         self.sim_folder = str(self.cf.CHILD_TRACK)+'/test'
-        self.observation = ((np.random.rand(6,)-.5)*8).astype('float32')
+        self.observation = self.observation_space.sample()
        
         self.trials = 0
         if return_info:
@@ -131,6 +133,9 @@ class TRACKenv(Env):
         if self.trials > 99:  # if trials over 100, also end
             done = True
             self.reset()
+            
+        for i in self.observation:
+            reward -= np.abs(i)**2
 
         info = {}
 
